@@ -12,18 +12,32 @@ public sealed class RegistrarMarcaAtraqueConsumer
 {
     private readonly IMarcaAtraqueRepository repository;
     private readonly ILogger<RegistrarMarcaAtraqueConsumer> logger;
+    private readonly IProgramaOperacionalRepository programaOperacionalRepository;
 
     public RegistrarMarcaAtraqueConsumer(
         IMarcaAtraqueRepository repository,
+        IProgramaOperacionalRepository programaOperacionalRepository,
         ILogger<RegistrarMarcaAtraqueConsumer> logger)
     {
         this.repository = repository;
         this.logger = logger;
+        this.programaOperacionalRepository = programaOperacionalRepository;
     }
 
     public async Task Consume(ConsumeContext<RegistrarMarcaAtraqueMessage> context)
     {
         var message = context.Message;
+
+        var programa = await programaOperacionalRepository.GetAsync(p => p.NumeroAZ == message.NumeroAZ);
+
+        if (programa is null)
+        {
+            logger.LogWarning("No se encontró en el programa operacional el Número de AZ {NumeroAz}", message.NumeroAZ);
+            return;
+        }
+
+        programa.CambiarPuesto(message.Puesto);
+
         var atraque = await  repository.GetAsync(p => p.NumeroAZ == message.NumeroAZ && p.CodigoOperacion == 3);
 
         var desatraque = await  repository.GetAsync(p => p.NumeroAZ == message.NumeroAZ && p.CodigoOperacion == 4);
