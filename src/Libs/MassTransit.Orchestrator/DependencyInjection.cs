@@ -38,7 +38,7 @@ public static class DependencyInjection
 
                 cfg.Host(new Uri(config.Host), config.ConnectionName, h =>
                 {
-                    h.Username(config.Username);
+                    h.Username(config.User);
                     h.Password(config.Password);
                 });
 
@@ -85,7 +85,7 @@ public static class DependencyInjection
 
                 cfg.Host(new Uri(config.Host), config.ConnectionName, h =>
                 {
-                    h.Username(config.Username);
+                    h.Username(config.User);
                     h.Password(config.Password);
                 });
 
