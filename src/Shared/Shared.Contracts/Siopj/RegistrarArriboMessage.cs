@@ -5,7 +5,7 @@ namespace Shared.Contracts.Siopj;
 public record RegistrarArriboMessage : IEventMessage
 {
     public int NumeroAz { get; init; }
-    public string Imo { get; init; } = default!;
+    public string IMO { get; init; } = default!;
     public DateTime ETA { get; init; }
     public DateTime ETB { get; init; }
     public DateTime ETC { get; init; }

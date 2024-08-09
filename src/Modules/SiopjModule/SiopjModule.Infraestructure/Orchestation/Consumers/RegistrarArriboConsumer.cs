@@ -33,7 +33,7 @@ public sealed class RegistrarArriboConsumer
 
         ProgramaOperacional programa = new(
             numeroAZ: message.NumeroAz,
-            imo: message.Imo,
+            imo: message.IMO,
             eta: message.ETA,
             etb: message.ETB,
             etc: message.ETC,
