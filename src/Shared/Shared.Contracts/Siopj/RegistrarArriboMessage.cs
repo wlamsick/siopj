@@ -10,8 +10,8 @@ public record RegistrarArriboMessage : IEventMessage
     public DateTime ETB { get; init; }
     public DateTime ETC { get; init; }
     public DateTime ETD { get; init; }
-    public int CodigoCliente { get; init; }
-    public int? CodigoEstibador { get; init; }
+    public string IdentificacionNaviero { get; init; } = default!;
+    public string? IdentificacionEstibador { get; init; }
     public string PuertoInicial { get; init; } = default!;
     public string PuertoProcedencia { get; init; } = default!;
     public string PuertoDestino { get; init; } = default!;
