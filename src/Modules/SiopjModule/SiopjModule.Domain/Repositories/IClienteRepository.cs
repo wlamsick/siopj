@@ -5,5 +5,5 @@ namespace SiopjModule.Domain.Repositories;
 
 public interface IClienteRepository : IRepository<Cliente>
 {
-    
+    int UltimoCodigo();
 }

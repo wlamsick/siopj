@@ -89,7 +89,7 @@ public sealed class RegistrarMarcaAtraqueConsumer
         catch (Exception ex)
         {
             logger.LogError(ex, "Error registrando marca de atraque {NumeroAz}", message.NumeroAZ);
-            return;
+            throw;
         }
     }
 }

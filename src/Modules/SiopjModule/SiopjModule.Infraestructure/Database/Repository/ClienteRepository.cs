@@ -10,4 +10,11 @@ public sealed class ClienteRepository
     public ClienteRepository(SiopjContext context) : base(context)
     {
     }
+
+    public int UltimoCodigo()
+    {
+        return _context.Set<Cliente>()
+            .Where(p => p.Codigo < 9000)
+            .Max(p => p.Codigo);
+    }
 }

@@ -62,6 +62,7 @@ public sealed class ActualizarImoConsumer
         catch (Exception ex)
         {
             logger.LogError(ex, "Error al actualizar la nave");
+            throw;
         }
     }
 }

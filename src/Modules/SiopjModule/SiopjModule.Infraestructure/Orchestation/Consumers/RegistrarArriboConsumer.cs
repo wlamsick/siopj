@@ -3,43 +3,92 @@ using MassTransit.Orchestrator;
 using Microsoft.Extensions.Logging;
 using Shared.Contracts.Siopj;
 using SiopjModule.Domain.Entities;
+using SiopjModule.Domain.Repositories;
 
 namespace SiopjModule.Infraestructure.Orchestation.Consumers;
 
 public sealed class RegistrarArriboConsumer
 : IMessageConsumer<RegistrarArriboMessage>
 {
-    private readonly IProgramaOperacionalRepository repository;
-    private readonly ILogger<RegistrarArriboConsumer> logger;
-    
+    private readonly IProgramaOperacionalRepository _progOperaciones;
+    private readonly ILogger<RegistrarArriboConsumer> _logger;
+    private readonly IClienteRepository _clientes;
+
     public RegistrarArriboConsumer(
         IProgramaOperacionalRepository repository,
+        IClienteRepository clientes,
         ILogger<RegistrarArriboConsumer> logger)
     {
-        this.repository = repository;
-        this.logger = logger;
+        this._progOperaciones = repository;
+        this._logger = logger;
+        this._clientes = clientes;
     }
 
     public async Task Consume(ConsumeContext<RegistrarArriboMessage> context)
     {
         var message = context.Message;
+        Cliente? naviero;
+        Cliente? estibador = null;
 
-        var exists = await repository.ExistsAsync(p => p.NumeroAZ == message.NumeroAz);
+        var exists = await _progOperaciones.ExistsAsync(p => p.NumeroAZ == message.NumeroAZ);
+
         if (exists)
         {
-            logger.LogWarning("Programa Operacional {NumeroAz} already exists", message.NumeroAz);
+            _logger.LogWarning("Programa Operacional {NumeroAz} already exists", message.NumeroAZ);
             return;
         }
 
+        if (long.TryParse(message.IdentificacionNaviero, out long cedulaJuridica))
+        {
+            naviero = await _clientes.GetAsync(p => p.CedulaJuridica == cedulaJuridica);
+
+            if (naviero is null)
+            {
+                var codCliente = _clientes.UltimoCodigo() + 1;
+
+                naviero = Cliente.RegistrarNaviero(codCliente, message.Naviero, cedulaJuridica);
+                _clientes.Insert(naviero);
+                await _clientes.UnitOfWork.SaveChangesAsync();
+            }
+        }
+        else
+        {
+            _logger.LogWarning("Invalid Naviero identification {IdentificacionNaviero}", message.IdentificacionNaviero);
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(message.IdentificacionEstibador))
+        {
+            if (long.TryParse(message.IdentificacionEstibador, out cedulaJuridica))
+            {
+                estibador = await _clientes.GetAsync(p => p.CedulaJuridica == cedulaJuridica);
+
+                if (estibador is null)
+                {
+                    var codCliente = _clientes.UltimoCodigo() + 1;
+
+                    estibador = Cliente.RegistrarEstibador(codCliente, message.Estibador!, cedulaJuridica);
+                    _clientes.Insert(estibador);
+                    await _clientes.UnitOfWork.SaveChangesAsync();
+                }
+            }
+            else
+            {
+                _logger.LogWarning("Invalid Estibador identification {IdentificacionEstibador}", message.IdentificacionEstibador);
+                return;
+            }
+        }
+
+
         ProgramaOperacional programa = new(
-            numeroAZ: message.NumeroAz,
+            numeroAZ: message.NumeroAZ,
             imo: message.IMO,
             eta: message.ETA,
             etb: message.ETB,
             etc: message.ETC,
             etd: message.ETD,
-            codigoCliente: message.CodigoCliente,
-            codigoEstibador: message.CodigoEstibador,
+            codigoCliente: naviero.Codigo,
+            codigoEstibador: estibador?.Codigo,
             puertoInicial: message.PuertoInicial,
             puertoProcedencia: message.PuertoProcedencia,
             puertoDestino: message.PuertoDestino,
@@ -47,24 +96,24 @@ public sealed class RegistrarArriboConsumer
             lineaNaviera: "9999",
             caladoProyectado: message.CaladoProyectado,
             tipoCarga: message.TipoCarga,
-            contenedoresImpo: message.ContenedoresImpo,
-            contenedoresExpo: message.ContenedoresExpo,
-            tonelajeImpo: message.TonelajeImpo,
-            tonelajeExpo: message.TonelajeExpo,
-            usuario: message.Usuario,
+            contenedoresImpo: 0,
+            contenedoresExpo: 0,
+            tonelajeImpo: 0,
+            tonelajeExpo: 0,
+            usuario: "japdeva-pls",
             codigoModalidad: message.CodigoModalidad
         );
-        
-        repository.Insert(programa);
+
+        _progOperaciones.Insert(programa);
 
         try
         {
-            await repository.UnitOfWork.SaveChangesAsync();
+            await _progOperaciones.UnitOfWork.SaveChangesAsync();
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error creating Programa Operacional {NumeroAz}", message.NumeroAz);
-            return;
-        }        
+            _logger.LogError(ex, "Error creating Programa Operacional {NumeroAz}", message.NumeroAZ);
+            throw;
+        }
     }
 }

@@ -40,6 +40,7 @@ public sealed class RegistrarNaveLlegadaPuertoConsumer
         catch (Exception ex)
         {
             logger.LogError(ex, "Error al guardar la llegada de la nave");
+            throw;
         }
     }
 }
