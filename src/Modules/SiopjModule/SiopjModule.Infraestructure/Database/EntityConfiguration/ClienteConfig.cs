@@ -15,5 +15,6 @@ internal sealed class ClienteConfig
         builder.Property(p => p.Codigo).HasColumnName("COD_CLIENTE");
         builder.Property(p => p.Nombre).HasMaxLength(200).HasColumnName("NOM_CLIENTE");
         builder.Property(p => p.CedulaJuridica).HasColumnName("NUM_CED_JURIDICA");
+        builder.Property(p => p.TipoCliente).HasColumnName("TIPO_CLIENTE");
     }
 }
