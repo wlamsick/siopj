@@ -58,6 +58,44 @@ public static class DependencyInjection
         return builder.UseRabbitMQOrchestator(new[] { entryAssembly }, configuration, sectionName);
     }
 
+    public static IHostBuilder UseRabbitMQOrchestator(
+        this IHostBuilder builder,
+        Assembly entryAssembly,
+        Action<IBusRegistrationContext, IRabbitMqBusFactoryConfigurator> configuration,
+        string sectionName = "RabbitMQ")
+    {
+        builder.ConfigureServices((context, services) =>
+        {
+            services.AddScoped<IEventBus, MassTransitMessageOrchestrator>();
+
+            services.Configure<OrchestatorSettings>(
+                context.Configuration.GetSection(sectionName)
+            );
+
+            services.AddSingleton(sp => sp.GetRequiredService<IOptions<OrchestatorSettings>>().Value);
+
+            services.AddMassTransit(bus =>
+            {
+                bus.AddConsumers(entryAssembly);
+
+                bus.UsingRabbitMq((context, cfg) =>
+                {
+                    var config = context.GetRequiredService<OrchestatorSettings>();
+
+                    cfg.Host(new Uri(config.Host), config.ConnectionName, h =>
+                    {
+                        h.Username(config.User);
+                        h.Password(config.Password);
+                    });
+
+                    configuration(context, cfg);
+                });
+            });
+        });
+
+        return builder;
+    }
+
 
     public static HostApplicationBuilder UseRabbitMQOrchestator(
         this HostApplicationBuilder builder,

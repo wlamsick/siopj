@@ -6,11 +6,23 @@ using MassTransit.Orchestrator;
 using Shared.Contracts.Siopj;
 using MassTransit;
 using SiopjModule.Infraestructure.Orchestation.Consumers;
+using Microsoft.Extensions.Hosting;
 
 namespace SiopjModule.Infraestructure;
 
 public static class DependecyInjection
 {
+
+    public static IHostBuilder ConfigureInfraestructure(this IHostBuilder builder)
+    {
+        builder.ConfigureServices((context, services) =>
+        {
+            services.AddMediatR(r => r.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            services.ConfigureDatabase(context.Configuration);
+        });
+        return builder;
+    }
+    
     public static WebApplicationBuilder ConfigureInfraestructure(this WebApplicationBuilder builder)
     {
         builder.Services.AddMediatR(r => r.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
@@ -18,7 +30,7 @@ public static class DependecyInjection
         return builder;
     }
 
-    public static WebApplicationBuilder ConfigureOrchestator(this WebApplicationBuilder builder)
+    public static IHostBuilder ConfigureOrchestator(this IHostBuilder builder)
     {
         var assemby = Assembly.GetExecutingAssembly();
         builder.UseRabbitMQOrchestator(entryAssembly: assemby,

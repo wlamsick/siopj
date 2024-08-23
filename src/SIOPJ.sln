@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Contracts", "Shared\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Util", "Shared\Shared.Util\Shared.Util.csproj", "{6BFC83D3-B7B5-47BF-9063-383EF187CD90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SiopjModule.WindowsService", "Modules\SiopjModule\SiopjModule.WindowsService\SiopjModule.WindowsService.csproj", "{E07FC635-7FE2-4B5E-95B9-BAC7958B4896}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{6BFC83D3-B7B5-47BF-9063-383EF187CD90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BFC83D3-B7B5-47BF-9063-383EF187CD90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BFC83D3-B7B5-47BF-9063-383EF187CD90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E07FC635-7FE2-4B5E-95B9-BAC7958B4896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E07FC635-7FE2-4B5E-95B9-BAC7958B4896}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E07FC635-7FE2-4B5E-95B9-BAC7958B4896}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E07FC635-7FE2-4B5E-95B9-BAC7958B4896}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -109,6 +115,7 @@ Global
 		{E41C4814-F474-4F75-B0DD-D4B8EA32D230} = {942A9F5E-1935-4E7A-A4B3-3E6D823C0390}
 		{A207EA40-964C-48BD-8ACB-8957136AA299} = {E55FD207-6471-4941-BD82-6349312E9DE3}
 		{6BFC83D3-B7B5-47BF-9063-383EF187CD90} = {E55FD207-6471-4941-BD82-6349312E9DE3}
+		{E07FC635-7FE2-4B5E-95B9-BAC7958B4896} = {ACE60A0A-FA18-45F6-A939-D1BA8915D7DC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7FC35B05-6A3A-45FC-9B35-07ABA10DE9F2}

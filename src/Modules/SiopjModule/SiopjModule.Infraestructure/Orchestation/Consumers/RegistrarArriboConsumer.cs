@@ -30,14 +30,6 @@ public sealed class RegistrarArriboConsumer
         Cliente? naviero;
         Cliente? estibador = null;
 
-        var exists = await _progOperaciones.ExistsAsync(p => p.NumeroAZ == message.NumeroAZ);
-
-        if (exists)
-        {
-            _logger.LogWarning("Programa Operacional {NumeroAz} already exists", message.NumeroAZ);
-            return;
-        }
-
         if (long.TryParse(message.IdentificacionNaviero, out long cedulaJuridica))
         {
             naviero = await _clientes.GetAsync(p => p.CedulaJuridica == cedulaJuridica);
@@ -79,32 +71,62 @@ public sealed class RegistrarArriboConsumer
             }
         }
 
+        var programa = await _progOperaciones.GetAsync(p => p.NumeroAZ == message.NumeroAZ);
 
-        ProgramaOperacional programa = new(
-            numeroAZ: message.NumeroAZ,
-            imo: message.IMO,
-            eta: message.ETA,
-            etb: message.ETB,
-            etc: message.ETC,
-            etd: message.ETD,
-            codigoCliente: naviero.Codigo,
-            codigoEstibador: estibador?.Codigo,
-            puertoInicial: message.PuertoInicial,
-            puertoProcedencia: message.PuertoProcedencia,
-            puertoDestino: message.PuertoDestino,
-            puertoFinal: message.PuertoFinal,
-            lineaNaviera: "9999",
-            caladoProyectado: message.CaladoProyectado,
-            tipoCarga: message.TipoCarga,
-            contenedoresImpo: 0,
-            contenedoresExpo: 0,
-            tonelajeImpo: 0,
-            tonelajeExpo: 0,
-            usuario: "japdeva-pls",
-            codigoModalidad: message.CodigoModalidad
-        );
+        if (programa != null)
+        {
+            programa.Update(
+                numeroAZ: message.NumeroAZ,
+                imo: message.IMO,
+                eta: message.ETA,
+                etb: message.ETB,
+                etc: message.ETC,
+                etd: message.ETD,
+                codigoCliente: naviero.Codigo,
+                codigoEstibador: estibador?.Codigo,
+                puertoInicial: message.PuertoInicial,
+                puertoProcedencia: message.PuertoProcedencia,
+                puertoDestino: message.PuertoDestino,
+                puertoFinal: message.PuertoFinal,
+                lineaNaviera: "9999",
+                caladoProyectado: message.CaladoProyectado,
+                tipoCarga: message.TipoCarga,
+                contenedoresImpo: 0,
+                contenedoresExpo: 0,
+                tonelajeImpo: 0,
+                tonelajeExpo: 0,
+                usuario: "japdeva-pls",
+                codigoModalidad: message.CodigoModalidad
+            );
+        }
+        else
+        {
+            programa = new(
+                numeroAZ: message.NumeroAZ,
+                imo: message.IMO,
+                eta: message.ETA,
+                etb: message.ETB,
+                etc: message.ETC,
+                etd: message.ETD,
+                codigoCliente: naviero.Codigo,
+                codigoEstibador: estibador?.Codigo,
+                puertoInicial: message.PuertoInicial,
+                puertoProcedencia: message.PuertoProcedencia,
+                puertoDestino: message.PuertoDestino,
+                puertoFinal: message.PuertoFinal,
+                lineaNaviera: "9999",
+                caladoProyectado: message.CaladoProyectado,
+                tipoCarga: message.TipoCarga,
+                contenedoresImpo: 0,
+                contenedoresExpo: 0,
+                tonelajeImpo: 0,
+                tonelajeExpo: 0,
+                usuario: "japdeva-pls",
+                codigoModalidad: message.CodigoModalidad
+            );
 
-        _progOperaciones.Insert(programa);
+            _progOperaciones.Insert(programa);
+        }
 
         try
         {
@@ -113,7 +135,7 @@ public sealed class RegistrarArriboConsumer
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating Programa Operacional {NumeroAz}", message.NumeroAZ);
-            throw;
+            throw new Exception("Error creating Programa Operacional", ex);
         }
     }
 }

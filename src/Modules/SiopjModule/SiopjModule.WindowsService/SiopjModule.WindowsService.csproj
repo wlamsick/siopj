@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-SiopjModule.WindowsService-97d1a1ca-e910-4fe6-b304-81daed713839</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.1" />    
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SiopjModule.Infraestructure\SiopjModule.Infraestructure.csproj" />
+  </ItemGroup>
+</Project>

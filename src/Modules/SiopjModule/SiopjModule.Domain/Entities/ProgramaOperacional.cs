@@ -132,4 +132,59 @@ public partial class ProgramaOperacional : IEntity
 
     public void CambiarPuesto(string puesto)
     => Puesto = puesto;
+
+    public void Update(
+        int numeroAZ,
+        string imo,
+        DateTime eta,
+        DateTime etb,
+        DateTime etc,
+        DateTime etd,
+        int codigoCliente,
+        int? codigoEstibador,
+        string puertoInicial,
+        string puertoProcedencia,
+        string puertoDestino,
+        string puertoFinal,
+        string lineaNaviera,
+        decimal caladoProyectado,
+        string tipoCarga,
+        int contenedoresImpo,
+        int contenedoresExpo,
+        decimal tonelajeImpo,
+        decimal tonelajeExpo,
+        string usuario,
+        int codigoModalidad
+    )
+    {
+        int week = eta.Date.WeekNumber();
+        NumeroAZ = numeroAZ;
+        Orden = 1;
+        Puesto = "ANC";
+        Anio = eta.Year;
+        Semana = week;
+        IMO = imo;
+        ETA = eta;
+        ETB = etb;
+        ETC = etc;
+        CodigoCliente = codigoCliente;
+        CodigoEstibador = codigoEstibador ?? 9998;
+        PuertoInicial = puertoInicial;
+        PuertoProcedencia = puertoProcedencia;
+        PuertoDestino = puertoDestino;
+        PuertoFinal = puertoFinal;        
+        LineaNaviera = lineaNaviera;
+        EstadiaEstimada = (etd - eta).TotalHours;
+        CaladoProyectado = caladoProyectado;
+        TipoCarga = tipoCarga.ToUpper();
+        ContenedoresImpo = contenedoresImpo;
+        //CodigoModalidad = 14;
+        CodigoModalidad = codigoModalidad;
+        ContenedoresExpo = contenedoresExpo;
+        TonelajeImpo = tonelajeImpo;
+        TonelajeExpo = tonelajeExpo;
+        CantidadPaletas = 0;
+        UsuarioAdiciona = usuario;
+        FechaAdicion = DateTime.Now;
+    }
 }
