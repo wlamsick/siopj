@@ -71,7 +71,7 @@ public sealed class RegistrarArriboConsumer
             }
         }
 
-        var programa = await _progOperaciones.GetAsync(p => p.NumeroAZ == message.NumeroAZ);
+        var programa = await _progOperaciones.GetAsync(p => p.NumeroAZ == message.NumeroAZ && p.Orden == 1);
 
         if (programa != null)
         {

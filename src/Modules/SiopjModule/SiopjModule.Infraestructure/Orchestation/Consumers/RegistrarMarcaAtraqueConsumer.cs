@@ -28,7 +28,7 @@ public sealed class RegistrarMarcaAtraqueConsumer
     {
         var message = context.Message;
 
-        var programa = await programaOperacionalRepository.GetAsync(p => p.NumeroAZ == message.NumeroAZ);
+        var programa = await programaOperacionalRepository.GetAsync(p => p.NumeroAZ == message.NumeroAZ && p.Orden == 1);
 
         if (programa is null)
         {
