@@ -45,7 +45,7 @@ public sealed class RegistrarMarcaAtraqueConsumer
         if (atraque is not null)
         {
             atraque.Update(
-                fecha: message.Fecha,
+                fecha: message.FechaAtraque,
                 puesto: message.Puesto,
                 codigoOperacion: 3
             );
@@ -54,7 +54,7 @@ public sealed class RegistrarMarcaAtraqueConsumer
         {
             atraque = new MarcaAtraque(
                 numeroAZ: message.NumeroAZ,
-                fecha: message.Fecha,
+                fecha: message.FechaAtraque,
                 puesto: message.Puesto,
                 codigoOperacion: 3
             );
@@ -65,7 +65,7 @@ public sealed class RegistrarMarcaAtraqueConsumer
         if (desatraque is not null)
         {
             desatraque.Update(
-                fecha: message.Fecha,
+                fecha: message.FechaDesatraque,
                 puesto: message.Puesto,
                 codigoOperacion: 4
             );
@@ -74,7 +74,7 @@ public sealed class RegistrarMarcaAtraqueConsumer
         {
             desatraque = new MarcaAtraque(
                 numeroAZ: message.NumeroAZ,
-                fecha: message.Fecha,
+                fecha: message.FechaDesatraque,
                 puesto: message.Puesto,
                 codigoOperacion: 4
             );
